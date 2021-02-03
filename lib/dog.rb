@@ -2,16 +2,22 @@ require 'pry'
 
 class Dog
 
-    attr_accessor :name, :breed, :db
+    attr_accessor :name, :breed
     attr_reader :id
 
-    @@all = []
+    def initialize(args)
+        def initialize args
+            args.each do |k,v|
+              instance_variable_set("@#{k}", v) unless v.nil?
+            end
+        binding.pry
 
-    def initialize(input_hash)
-       input_hash.each do |key, value|
-        self.send("#{key}=", value)
-       end
-       @id = id
+        @name = 
+        breed = row[1]
+
+        @id = id
+       @name = name
+       @breed = breed
 
     end
 
@@ -37,22 +43,6 @@ class Dog
 
     end
 
-    def self.all_instances
-        @@all
-
-    end
-
-    def self.all
-        sql = <<-SQL
-        SELECT * FROM dogs
-        SQL
-        data = DB[:conn].execute(sql)
-        data.map do |dog_hash|
-            Dog.new(dog_hash)
-        end
-
-    end
-
     def save
         sql = <<-SQL
         INSERT INTO dogs (name, breed)
@@ -60,17 +50,30 @@ class Dog
 
         SQL
         data = DB[:conn].execute(sql, self.name, self.breed)
+        new_id = DB[:conn].execute("SELECT last_insert_rowid() FROM dogs")[0][0]
+        self.id = new_id
+        self
     end
 
-    def self.new_from_db(row
-        id, name, breed = row
-    self.new(name, breed, id)
+    def self.new_from_db(row)
+        #binding.pry
+        id = row[0]
+        name = row[1]
+        breed = row[2]
+        
+
+        #id, name, breed = row
+        self.new(id, name, breed)
 
 
     end
 
     def self.create(input_hash)
-        dog = Dog.new(name, breed)
+        #binding.pry
+        #input_hash.each do |key, value|
+         #   self.send("#{key}=", value)
+          # end
+        dog = Dog.new(input_hash)
         dog.save
         dog
 
