@@ -2,22 +2,15 @@ require 'pry'
 
 class Dog
 
-    attr_accessor :name, :breed
+    attr_accessor :name, :breed, :db
     attr_reader :id
 
-    def initialize(args)
-        def initialize args
-            args.each do |k,v|
-              instance_variable_set("@#{k}", v) unless v.nil?
-            end
-        binding.pry
+    @@all = []
 
-        @name = 
-        breed = row[1]
-
-        @id = id
-       @name = name
-       @breed = breed
+    def initialize(initial_hash)
+        #binding.pry
+       @name = initial_hash[:name]
+       @breed = initial_hash[:breed]
 
     end
 
@@ -42,6 +35,8 @@ class Dog
         DB[:conn].execute(sql)
 
     end
+
+
 
     def save
         sql = <<-SQL
